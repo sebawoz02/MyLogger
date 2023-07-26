@@ -102,7 +102,6 @@ logger: $(LIB_NAME)
 install: __FORCE
 	$(Q)$(SCRIPT_DIR)/install_mylogger.sh $(INSTALL_PATH)
 
-
 __FORCE:
 
 $(LIB_NAME): $(LOBJ)
