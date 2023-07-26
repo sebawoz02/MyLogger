@@ -17,8 +17,10 @@ cd ../
 make logger
 
 echo "Installing MyLogger to $INSTALL_DIR ..."
-mkdir -p "$INSTALL_DIR"
+mkdir -p $INSTALL_DIR
 cp ./libmylogger.a $INSTALL_DIR/
 cp -R ./include/ $INSTALL_DIR
+rm libmylogger.a
+rm src/mylogger.o
 
 echo "DONE"
