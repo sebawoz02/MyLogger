@@ -14,9 +14,8 @@ typedef enum mylogger_init_error_code_t
 {
     MYLOGGER_INIT_SUCCESS               = 0,
     MYLOGGER_INIT_ALREADY_RUNNING_ERROR = 1,
-    MYLOGGER_INIT_FILE_ERROR            = 2,
-    MYLOGGER_INIT_NO_DESCRIPTORS_ERROR  = 3,
-    MYLOGGER_INIT_OTHER_ERROR           = 4
+    MYLOGGER_INIT_FILE_CREATION_ERROR   = 2,
+    MYLOGGER_INIT_OTHER_ERROR           = 3
 } mylogger_init_error_code_t;
 
 /**
@@ -72,8 +71,8 @@ typedef enum mylogger_init_error_code_t
 
 /**
  * Initializes the logger instance with the given features.
- * @param log_file - file to which the logs are to be written. Can be NULL if stdout or stderr logging feature added.
- * @param features - chosen logger features. Can be combined with bitwise OR operator
+ * @param[in] log_file - file to which the logs are to be written. Can be NULL if stdout or stderr logging feature added.
+ * @param[in] features - chosen logger features. Can be combined with bitwise OR operator
  *
  * @return  MYLOGGER_INIT_SUCCESS = 0 on success \n
  *          else any other error code >0
