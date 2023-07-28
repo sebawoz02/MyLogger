@@ -37,6 +37,7 @@ typedef uint8_t mylogger_feature_t;
 #define MYLOGGER_FEATURE_STDERR_WRAP        (1 << 1)
 #define MYLOGGER_FEATURE_TIMESTAMPS_WRAP    (1 << 2)
 #define MYLOGGER_FEATURE_THREAD_ID_WRAP     (1 << 3)
+#define MYLOGGER_FEATURE_NO_FILE_WRAP       (1 << 4)
 
 
 void __attribute__(( format(printf, 5, 6) )) __mylogger_print(const char* file,

@@ -43,6 +43,7 @@ SCRIPT_DIR := ./scripts
 SRC := $(wildcard $(SDIR)/*.c)
 ESRC := $(SRC) $(wildcard $(EDIR)/*.c)
 TSRC := $(SRC) $(wildcard $(TDIR)/*.c)
+LOGS := $(wildcard log*.txt)
 
 # .o Files
 LOBJ := $(SRC:%.c=%.o)
@@ -131,6 +132,7 @@ clean:
 	$(Q)$(RM) $(LIB_NAME)
 	$(call print_rm,OBJ)
 	$(Q)$(RM) $(OBJ)
+	$(Q)$(RM) $(LOGS)
 
 help:
 	@echo "Targets:"
@@ -139,6 +141,7 @@ help:
 	@echo "    test              - tests"
 	@echo "    examples          - examples"
 	@echo "    install[P = Path] - install MyLogger to path P"
+	@echo "    clean             - remove every .c .o .out file and log files in current dir"
 	@echo -e
 	@echo "When DEBUG=1 no opt applied and compiled with -ggdb3 flag"
 	@echo "When V=1 build with verbose mode"

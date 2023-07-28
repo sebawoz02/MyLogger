@@ -26,12 +26,14 @@ typedef enum mylogger_init_error_code_t
  * - STDERR     - display log messages on stderr as well
  * - TIMESTAMPS - add timestamps to your log messages
  * - THREAD_ID  - add thread id to your log messages
- * - ALL        - use all the features
+ * - NO_FILE    - no logging file will be created
+ * - ALL        - use all the features except NO_FILE
  * */
 #define MYLOGGER_FEATURE_STDOUT         MYLOGGER_FEATURE_STDOUT_WRAP
 #define MYLOGGER_FEATURE_STDERR         MYLOGGER_FEATURE_STDERR_WRAP
 #define MYLOGGER_FEATURE_TIMESTAMPS     MYLOGGER_FEATURE_TIMESTAMPS_WRAP
 #define MYLOGGER_FEATURE_THREAD_ID      MYLOGGER_FEATURE_THREAD_ID_WRAP
+#define MYLOGGER_FEATURE_NO_FILE        MYLOGGER_FEATURE_NO_FILE_WRAP
 
 #define MYLOGGER_FEATURE_ALL            (MYLOGGER_FEATURE_STDOUT | MYLOGGER_FEATURE_STDERR | \
                                         MYLOGGER_FEATURE_TIMESTAMPS | MYLOGGER_FEATURE_THREAD_ID)
@@ -95,6 +97,6 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
  * */
 void mylogger_destroy(void);
 
-#endif
+#endif // NDEBUG
 
 #endif //MYLOGGER_MYLOGGER_H

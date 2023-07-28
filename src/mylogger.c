@@ -18,6 +18,7 @@ typedef struct MyLogger_features
     bool feat_stderr:1;         // MYLOGGER_FEATURE_STDERR
     bool feat_timestamps:1;     // MYLOGGER_FEATURE_TIMESTAMPS
     bool feat_tid:1;            // MYLOGGER_FEATURE_THREAD_ID
+    bool feat_no_file:1;        // MYLOGGER_FEATURE_NO_FILE
 } MyLogger_features_S;
 
 
@@ -50,10 +51,12 @@ static MyLogger_features_S __mylogger_parse_features( mylogger_feature_t feature
       .feat_stdout =        features & MYLOGGER_FEATURE_STDOUT,
       .feat_stderr =        features & MYLOGGER_FEATURE_STDERR,
       .feat_timestamps =    features & MYLOGGER_FEATURE_TIMESTAMPS,
-      .feat_tid =           features &MYLOGGER_FEATURE_THREAD_ID
+      .feat_tid =           features & MYLOGGER_FEATURE_THREAD_ID,
+      .feat_no_file =       features & MYLOGGER_FEATURE_NO_FILE
     };
 }
 
+#define MYLOGGER_FILE_NAME_MAX_SIZE 256
 /**
  * Creates name for the new log file with a timestamp.
  * @param[out] fileName - pointer where to save new log file name
@@ -66,13 +69,14 @@ static void __mylogger_create_file_name(char* fileName)
     time(&rawTime);
     localtime_r(&rawTime, timeInfo);
 
-    strftime(fileName, 256, "log_%Y%m%d_%H%M%S.txt", timeInfo);
+    strftime(fileName, MYLOGGER_FILE_NAME_MAX_SIZE, "log_%Y%m%d_%H%M%S.txt", timeInfo);
     free(timeInfo);
 }
 
 
 mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t features)
 {
+    // check if logger is not already initialized
     if(atomic_flag_test_and_set(&g_logger_is_initilized) == 0)
     {
         g_mylogger_instance = malloc(sizeof(MyLogger_instance_S));
@@ -89,18 +93,35 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
           .features = __mylogger_parse_features(features)
         };
 
-        if(g_mylogger_instance->file_fd == NULL)
+        // if no logging file specified create new file
+        if(g_mylogger_instance->file_fd == NULL && !g_mylogger_instance->features.feat_no_file)
         {
-            char filename[256];
+            char filename[MYLOGGER_FILE_NAME_MAX_SIZE];
             __mylogger_create_file_name(filename);
             g_mylogger_instance->file_fd = fopen(filename, "a+");
 
             if(g_mylogger_instance->file_fd == NULL)
             {
                 perror("MyLogger file creation error!");
+
+                pthread_mutex_destroy(&g_mylogger_instance->mutex);
                 atomic_flag_clear(&g_logger_is_initilized);
+                free(g_mylogger_instance);
+
                 return MYLOGGER_INIT_FILE_CREATION_ERROR;
             }
+        }
+        else if(g_mylogger_instance->file_fd == NULL && \
+                !g_mylogger_instance->features.feat_stdout && \
+                !g_mylogger_instance->features.feat_stderr )
+        {
+            perror("MyLogger no file descriptors specified!");
+
+            pthread_mutex_destroy(&g_mylogger_instance->mutex);
+            atomic_flag_clear(&g_logger_is_initilized);
+            free(g_mylogger_instance);
+
+            return MYLOGGER_INIT_OTHER_ERROR;
         }
 
         return MYLOGGER_INIT_SUCCESS;
@@ -108,3 +129,23 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
     perror("MyLogger is already initialized!");
     return MYLOGGER_INIT_ALREADY_RUNNING_ERROR;
 }
+
+void mylogger_destroy(void)
+{
+    if(atomic_flag_test_and_set(&g_logger_is_initilized) == 1)
+    {
+        atomic_flag_clear(&g_logger_is_initilized);
+        // destroy the mutex
+        pthread_mutex_destroy(&g_mylogger_instance->mutex);
+        // close file
+        if(!g_mylogger_instance->features.feat_no_file)
+            fclose(g_mylogger_instance->file_fd);
+        free(g_mylogger_instance);
+    }
+    else
+    {
+        atomic_flag_clear(&g_logger_is_initilized);
+        perror("Cannot destroy MyLogger because its not initialized!");
+    }
+}
+
