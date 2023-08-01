@@ -1,0 +1,33 @@
+name: Test Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test_and_generate_coverage:
+    name: Test and Generate Coverage Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Build
+        run: make
+
+      - name: Run Unit Tests
+        run: make test
+
+      - name: Install gcovr
+        run: pip install gcovr
+
+      - name: Generate Coverage Report
+        run: gcovr -r . --html-details --output=coverage_report.html

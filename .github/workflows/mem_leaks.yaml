@@ -22,4 +22,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install valgrind
 
       - name: Run Valgrind Memory Leak Check
-        run: valgrind --leak-check=full ./test.out
+        run: valgrind valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --error-exitcode=1 ./test.out
+
+      - name: Cleanup
+        run: make clean

@@ -1,0 +1,25 @@
+name: Main CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make
+
+      - name: Run Unit Tests
+        run: make test
+
+      - name: Cleanup
+        run: make clean
