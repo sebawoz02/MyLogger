@@ -20,21 +20,25 @@ static void test_mylogger_init_destroy(void)
         // fclose(f); - file is closed by MyLogger
         remove("test_log_file.txt");    // delete tmp file
     }
+
     // No file specified - No errors expected
     {
         assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_SUCCESS);
         mylogger_destroy();
     }
+
     // Creating logger with any feature should not raise an error
     {
         assert(mylogger_init(NULL, MYLOGGER_FEATURE_ALL) == MYLOGGER_INIT_SUCCESS);
         mylogger_destroy();
     }
+
     // No file specified and MYLOGGER_FEATURE_NO_FILE - error expected
     {
         assert(mylogger_init(NULL, MYLOGGER_FEATURE_NO_FILE) == MYLOGGER_INIT_OTHER_ERROR);
         // mylogger_destroy(); - Logger not initialized
     }
+
     // You should not be able to creat second logger.
     {
         assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_SUCCESS);

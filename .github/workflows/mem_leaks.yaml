@@ -1,0 +1,25 @@
+name: Valgrind Memory Leak Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  valgrind_memory_leak_check:
+    name: Valgrind Memory Leak Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: make test
+
+      - name: Install Valgrind
+        run: sudo apt-get update && sudo apt-get install valgrind
+
+      - name: Run Valgrind Memory Leak Check
+        run: valgrind --leak-check=full ./test.out
