@@ -144,6 +144,9 @@ $(T_EXEC): $(TOBJ)
 config:
 	$(Q)./$(SCRIPT_DIR)/config_env.sh
 
+leaks: test
+	$(Q)./$(SCRIPT_DIR)/check_memleaks.sh
+
 clean:
 	$(call print_rm,EXEC)
 	$(Q)$(RM) $(E_EXEC)
@@ -160,6 +163,7 @@ help:
 	@echo "    logger            - build only MyLogger"
 	@echo "    test              - build tests"
 	@echo "    coverage          - create html report about test coverage"
+	@echo "    leaks             - checks for memory leaks and prints summary"
 	@echo "    examples          - build examples"
 	@echo "    install[P = Path] - install MyLogger to path P"
 	@echo "    config            - install all required dependencies (run with sudo)"

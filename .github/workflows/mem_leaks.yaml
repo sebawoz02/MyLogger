@@ -21,8 +21,11 @@ jobs:
       - name: Install Valgrind
         run: sudo apt-get update && sudo apt-get install valgrind
 
-      - name: Run Valgrind Memory Leak Check
-        run: valgrind valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --error-exitcode=1 ./test.out
+      - name: Run Valgrind Leak Check
+        run: make leaks
+
+      - name: Print Valgrind Full Memory Leak Check Report
+        run: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --error-exitcode=1 ./test.out
 
       - name: Cleanup
         run: make clean
