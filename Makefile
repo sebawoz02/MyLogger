@@ -140,6 +140,9 @@ $(T_EXEC): $(TOBJ)
 	$(call print_cc,$<)
 	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) -c $< -o $@ $(C_TEST_FLAGS)
 
+config:
+	$(Q)./$(SCRIPT_DIR)/config_env.sh
+
 clean:
 	$(call print_rm,EXEC)
 	$(Q)$(RM) $(E_EXEC)
@@ -154,10 +157,11 @@ help:
 	@echo "Targets:"
 	@echo "    all               - build MyLogger, examples and tests"
 	@echo "    logger            - build only MyLogger"
-	@echo "    test              - tests"
+	@echo "    test              - build tests"
 	@echo "    coverage          - create html report about test coverage"
-	@echo "    examples          - examples"
+	@echo "    examples          - build examples"
 	@echo "    install[P = Path] - install MyLogger to path P"
+	@echo "    config            - install all required dependencies (run with sudo)"
 	@echo "    clean             - remove every .c .o .out file and log files in current dir"
 	@echo -e
 	@echo "When DEBUG=1 no opt applied and compiled with -ggdb3 flag"
