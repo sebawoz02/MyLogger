@@ -129,6 +129,7 @@ coverage:
 	$(Q)./$(T_EXEC)
 	$(Q)$(RM) $(TDIR)/*.gcda $(TDIR)/*.gcno
 	$(Q)$(T_COVR) $(T_COVR_FLAGS)
+	$(Q)./$(SCRIPT_DIR)/check_coverage.sh
 
 test: $(T_EXEC)
 

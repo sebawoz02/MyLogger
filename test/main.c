@@ -44,6 +44,9 @@ static void test_mylogger_init_destroy(void)
         assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_SUCCESS);
         assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_ALREADY_RUNNING_ERROR);
         mylogger_destroy();
+
+        // Destroying already destroyed logger should only print error
+        mylogger_destroy();
     }
 
 }
@@ -52,5 +55,6 @@ static void test_mylogger_init_destroy(void)
 int main(void)
 {
     test_mylogger_init_destroy();
+    printf("Tests finished successfully!\n");
     return 0;
 }
