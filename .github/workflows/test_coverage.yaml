@@ -30,4 +30,4 @@ jobs:
         run: pip install gcovr
 
       - name: Generate Coverage Report
-        run: gcovr -r . --html-details --output=coverage_report.html
+        run: make coverage

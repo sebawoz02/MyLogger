@@ -11,6 +11,7 @@ C_OPT := -O3
 C_WARNS :=
 
 C_FLAGS :=
+C_TEST_FLAGS ?=
 
 ifeq ($(CC),clang)
 	C_WARNS += -Weverything -Wno-padded
@@ -59,6 +60,14 @@ L_INC := $(foreach l, $(LIB), -l$l)
 E_EXEC := example.out
 T_EXEC := test.out
 LIB_NAME := libmylogger.a
+
+# Other files
+COV_FILES := *.html *.css $(TDIR)/*.gcda $(TDIR)/*.gcno $(SDIR)/*.gcda $(SDIR)/*.gcno
+
+# Programs
+T_COVR := gcovr
+
+T_COVR_FLAGS := -r . --html-details --output=coverage_report.html
 
 # Verbose mode / Not quiet
 ifeq ("$(origin V)", "command line")
@@ -115,15 +124,21 @@ $(E_EXEC): $(EOBJ)
 	$(call print_bin,$@)
 	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) $(EOBJ) -o $@ $(L_INC)
 
+coverage:
+	$(Q)$(MAKE) test C_TEST_FLAGS='-fprofile-arcs -ftest-coverage'
+	$(Q)./$(T_EXEC)
+	$(Q)$(RM) $(TDIR)/*.gcda $(TDIR)/*.gcno
+	$(Q)$(T_COVR) $(T_COVR_FLAGS)
+
 test: $(T_EXEC)
 
 $(T_EXEC): $(TOBJ)
 	$(call print_bin,$@)
-	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) $(TOBJ) -o $@ $(L_INC)
+	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) $(TOBJ) -o $@ $(L_INC) $(C_TEST_FLAGS)
 
 %.o:%.c
 	$(call print_cc,$<)
-	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) -c $< -o $@
+	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) -c $< -o $@ $(C_TEST_FLAGS)
 
 clean:
 	$(call print_rm,EXEC)
@@ -133,12 +148,14 @@ clean:
 	$(call print_rm,OBJ)
 	$(Q)$(RM) $(OBJ)
 	$(Q)$(RM) $(LOGS)
+	$(Q)$(RM) $(COV_FILES)
 
 help:
 	@echo "Targets:"
 	@echo "    all               - build MyLogger, examples and tests"
 	@echo "    logger            - build only MyLogger"
 	@echo "    test              - tests"
+	@echo "    coverage          - create html report about test coverage"
 	@echo "    examples          - examples"
 	@echo "    install[P = Path] - install MyLogger to path P"
 	@echo "    clean             - remove every .c .o .out file and log files in current dir"
