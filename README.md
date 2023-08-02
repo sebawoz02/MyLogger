@@ -26,9 +26,9 @@ MyLogger comes with a prepared building system using a Makefile, making it easy 
 ### Prerequisites
 
 Before building and testing MyLogger, ensure you have the necessary tools and dependencies installed. You can use the following command to set up your environment:
-
 ```sh
 make configure
+```
 
 This command checks and installs any required dependencies, ensuring that you have everything necessary to run the tests and build the library.
 
@@ -36,9 +36,11 @@ This command checks and installs any required dependencies, ensuring that you ha
 
 To build and install the MyLogger library, you can use the following commands:
 
-'''sh
+
+```sh
 make
 make install PREFIX=/your/installation/
+```
 
 The first command compiles the library, while the second command installs it under the specified installation path (PREFIX). If PREFIX is not provided, the library will be installed under the default path.
 
@@ -48,8 +50,9 @@ MyLogger has been rigorously tested to ensure reliability and robustness. The li
 
 To run the tests, simply use the following command:
 
-'''sh
+```sh
 make test
+```
 
 This command will execute the test suite, providing you with valuable feedback on the library's functionality and reliability.
 
@@ -57,7 +60,8 @@ This command will execute the test suite, providing you with valuable feedback o
 
 For additional build options and commands, you can always refer to the built-in help:
 
-'''sh
+```sh
 make help
+```
 
 This will display a list of available commands, their description.
