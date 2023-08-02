@@ -38,7 +38,7 @@ To build and install the MyLogger library, you can use the following commands:
 
 
 ```sh
-make
+make 
 make install PREFIX=/your/installation/
 ```
 
@@ -48,13 +48,12 @@ The first command compiles the library, while the second command installs it und
 
 MyLogger has been rigorously tested to ensure reliability and robustness. The library boasts 100% test coverage and has been thoroughly checked for memory leaks.
 
-To run the tests, simply use the following command:
+To build and run the tests, simply use the following command:
 
 ```sh
 make test
+./test.out
 ```
-
-This command will execute the test suite, providing you with valuable feedback on the library's functionality and reliability.
 
 ### More Information
 
