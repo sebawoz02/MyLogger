@@ -27,7 +27,7 @@ MyLogger comes with a prepared building system using a Makefile, making it easy 
 
 Before building and testing MyLogger, ensure you have the necessary tools and dependencies installed. You can use the following command to set up your environment:
 ```sh
-make configure
+make config
 ```
 
 This command checks and installs any required dependencies, ensuring that you have everything necessary to run the tests and build the library.
