@@ -26,9 +26,6 @@ jobs:
       - name: Clean
         run: make clean
 
-      - name: Run Unit Tests
-        run: make test
-
       - name: Install gcovr
         run: pip install gcovr
 
