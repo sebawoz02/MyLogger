@@ -43,7 +43,7 @@ SCRIPT_DIR := ./scripts
 # .c Files
 SRC := $(wildcard $(SDIR)/*.c)
 ESRC := $(SRC) $(wildcard $(EDIR)/*.c)
-TSRC := $(SRC) $(wildcard $(TDIR)/*.c)
+TSRC := $(wildcard $(TDIR)/*.c)
 LOGS := $(wildcard log*.txt)
 
 # .o Files
@@ -67,7 +67,7 @@ COV_FILES := *.html *.css $(TDIR)/*.gcda $(TDIR)/*.gcno $(SDIR)/*.gcda $(SDIR)/*
 # Programs
 T_COVR := gcovr
 
-T_COVR_FLAGS := -r . --html-details --output=coverage_report.html
+T_COVR_FLAGS := -r . --html-details --output=coverage_report.html --exclude "test/main.*"
 
 # Verbose mode / Not quiet
 ifeq ("$(origin V)", "command line")
@@ -127,7 +127,6 @@ $(E_EXEC): $(EOBJ)
 coverage:
 	$(Q)$(MAKE) test C_TEST_FLAGS='-fprofile-arcs -ftest-coverage'
 	$(Q)./$(T_EXEC)
-	$(Q)$(RM) $(TDIR)/*.gcda $(TDIR)/*.gcno
 	$(Q)$(T_COVR) $(T_COVR_FLAGS)
 	$(Q)./$(SCRIPT_DIR)/check_coverage.sh
 

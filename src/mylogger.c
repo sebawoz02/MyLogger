@@ -134,13 +134,13 @@ void mylogger_destroy(void)
 {
     if(atomic_flag_test_and_set(&g_logger_is_initilized) == 1)
     {
-        atomic_flag_clear(&g_logger_is_initilized);
         // destroy the mutex
         pthread_mutex_destroy(&g_mylogger_instance->mutex);
         // close file
         if(!g_mylogger_instance->features.feat_no_file)
             fclose(g_mylogger_instance->file_fd);
         free(g_mylogger_instance);
+        atomic_flag_clear(&g_logger_is_initilized);
     }
     else
     {
