@@ -11,10 +11,10 @@ coverage_line=$(echo "$coverage_report" | grep -E "lines:[[:space:]]*100\.0%")
 
 # Check if the coverage_line is empty (i.e., coverage is not 100%)
 if [ -z "$coverage_line" ]; then
-  echo "Test coverage is not 100%."
+  echo "Test coverage is not 100%. Its $(coverage_line)%."
   exit_status=1
 else
-  echo "Test coverage is 100%. Its $(coverage_line)%."
+  echo "Test coverage is 100%."
 fi
 
 # Exit with the appropriate status
