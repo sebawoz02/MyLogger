@@ -1,7 +1,28 @@
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#include <mylogger/mylogger.h>
+static size_t g_malloc_mock_counter = 0;
+// Malloc mock function. Fails only on the first use.
+static inline void* mock_malloc(size_t size)
+{
+    if(g_malloc_mock_counter++ == 0)
+        return NULL;
+    return malloc(size);
+}
+#define malloc(size) mock_malloc(size)
+
+static size_t g_fopen_mock_counter = 0;
+// fopen mock function. Fails only oon the first use.
+static inline FILE *mock_fopen(const char *__filename, const char *__modes)
+{
+    if(g_fopen_mock_counter++ == 0)
+        return NULL;
+    return fopen(__filename, __modes);
+}
+#define fopen(__filename, __modes) mock_fopen(__filename, __modes)
+
+#include <../src/mylogger.c>    // Including .c allows us to mock functions and test statics.
 
 static void test_mylogger_init_destroy(void);
 
@@ -10,6 +31,14 @@ static void test_mylogger_init_destroy(void);
  * */
 static void test_mylogger_init_destroy(void)
 {
+    // First use of malloc should fail. Error code expected.
+    {
+        assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_OTHER_ERROR);
+    }
+    // First use of fopen should fail. Error code expected.
+    {
+        assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_FILE_CREATION_ERROR);
+    }
     // File specified - No errors expected
     {
         FILE* f = fopen("test_log_file.txt", "a+"); // create tmp file
