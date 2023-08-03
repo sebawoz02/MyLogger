@@ -153,7 +153,9 @@ clean:
 	$(Q)$(RM) $(LIB_NAME)
 	$(call print_rm,OBJ)
 	$(Q)$(RM) $(OBJ)
+	$(call print_rm,LOGS)
 	$(Q)$(RM) $(LOGS)
+	$(call print_rm,COV_FILES)
 	$(Q)$(RM) $(COV_FILES)
 
 help:
