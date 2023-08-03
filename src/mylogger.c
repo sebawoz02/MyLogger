@@ -83,7 +83,7 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
         if(g_mylogger_instance == NULL)
         {
             atomic_flag_clear(&g_logger_is_initilized);
-            perror("MyLogger malloc error!");
+            fprintf(stderr,"MyLogger malloc error!\n");
             return MYLOGGER_INIT_OTHER_ERROR;
         }
 
@@ -102,7 +102,7 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
 
             if(g_mylogger_instance->file_fd == NULL)
             {
-                perror("MyLogger file creation error!");
+                fprintf(stderr,"MyLogger file creation error!\n");
 
                 pthread_mutex_destroy(&g_mylogger_instance->mutex);
                 atomic_flag_clear(&g_logger_is_initilized);
@@ -115,7 +115,7 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
                 !g_mylogger_instance->features.feat_stdout && \
                 !g_mylogger_instance->features.feat_stderr )
         {
-            perror("MyLogger no file descriptors specified!");
+            fprintf(stderr,"MyLogger no file descriptors specified!\n");
 
             pthread_mutex_destroy(&g_mylogger_instance->mutex);
             atomic_flag_clear(&g_logger_is_initilized);
@@ -126,7 +126,7 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
 
         return MYLOGGER_INIT_SUCCESS;
     }
-    perror("MyLogger is already initialized!");
+    fprintf(stderr,"MyLogger is already initialized!\n");
     return MYLOGGER_INIT_ALREADY_RUNNING_ERROR;
 }
 
@@ -145,7 +145,7 @@ void mylogger_destroy(void)
     else
     {
         atomic_flag_clear(&g_logger_is_initilized);
-        perror("Cannot destroy MyLogger because its not initialized!");
+        fprintf(stderr,"Cannot destroy MyLogger because its not initialized!\n");
     }
 }
 
