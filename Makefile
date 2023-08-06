@@ -15,6 +15,7 @@ C_TEST_FLAGS ?=
 
 ifeq ($(CC),clang)
 	C_WARNS += -Weverything -Wno-padded
+	C_FLAGS += -g
 else ifneq (, $(filter $(CC), cc gcc))
 	C_WARNS += -Wall -Wextra -pedantic -Wcast-align \
 			   -Winit-self -Wlogical-op -Wmissing-include-dirs \
@@ -23,6 +24,7 @@ else ifneq (, $(filter $(CC), cc gcc))
 			   -Wuninitialized -Wold-style-definition -Wstrict-prototypes \
 			   -Wmissing-prototypes -Wswitch-default -Wbad-function-cast \
 			   -Wnested-externs -Wconversion -Wunreachable-code
+	C_FLAGS += -rdynamic
 endif
 
 ifeq ("$(origin DEBUG)", "command line")
@@ -124,7 +126,7 @@ $(E_EXEC): $(EOBJ)
 	$(call print_bin,$@)
 	$(Q)$(CC) $(C_FLAGS) -I$(IDIR) $(EOBJ) -o $@ $(L_INC)
 
-coverage:
+coverage: clean
 	$(Q)$(MAKE) test C_TEST_FLAGS='-fprofile-arcs -ftest-coverage'
 	$(Q)./$(T_EXEC)
 	$(Q)$(T_COVR) $(T_COVR_FLAGS)

@@ -81,10 +81,6 @@ typedef enum mylogger_init_error_code_t
  * */
 mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t features);
 
-// Log Macros
-// NDEBUG removes logging.
-#ifndef NDEBUG
-
 #define MYLOGGER_FATAL(...)     MYLOGGER_FATAL_WRAPPER(__VA_ARGS__)
 #define MYLOGGER_CRITICAL(...)  MYLOGGER_CRITICAL_WRAPPER(__VA_ARGS__)
 #define MYLOGGER_ERROR(...)     MYLOGGER_ERROR_WRAPPER(__VA_ARGS__)
@@ -96,7 +92,5 @@ mylogger_init_error_code_t mylogger_init(FILE* log_file, mylogger_feature_t feat
  * Destroys currently running logger instance.
  * */
 void mylogger_destroy(void);
-
-#endif // NDEBUG
 
 #endif //MYLOGGER_MYLOGGER_H
