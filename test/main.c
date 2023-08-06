@@ -25,6 +25,9 @@ static inline FILE *mock_fopen(const char *__filename, const char *__modes)
 #include <../src/mylogger.c>    // Including .c allows us to mock functions and test statics.
 
 static void test_mylogger_init_destroy(void);
+static void test_mylogger_full_log_to_file(void);
+static void test_mylogger_log_to_stdout(void);
+static void test_mylogger_log_to_stderr(void);
 
 /**
  * Testing mylogger_init and mylogger_destroy functions.
@@ -80,10 +83,73 @@ static void test_mylogger_init_destroy(void)
 
 }
 
+/**
+ * Testing MyLogger logging into file with TID and Timestamps feature.
+ * */
+static void test_mylogger_full_log_to_file(void)
+{
+    assert(mylogger_init(NULL, MYLOGGER_FEATURE_TIMESTAMPS | MYLOGGER_FEATURE_THREAD_ID) == MYLOGGER_INIT_SUCCESS);
+
+    // Testing all levels
+    MYLOGGER_DEBUG("Test - debug\n");
+    MYLOGGER_INFO("Test - info\n");
+    MYLOGGER_WARNING("Test - warning\n");
+    MYLOGGER_ERROR("Test - error\n");
+    MYLOGGER_CRITICAL("Test - critical\n");
+    MYLOGGER_FATAL("Test - fatal\n");
+
+    mylogger_destroy();
+}
+
+/**
+ * Testing MyLogger logging into stdout with TID and Timestamps feature.
+ * */
+static void test_mylogger_log_to_stdout(void)
+{
+    assert(mylogger_init(NULL,
+                         MYLOGGER_FEATURE_TIMESTAMPS |
+                         MYLOGGER_FEATURE_THREAD_ID |
+                         MYLOGGER_FEATURE_NO_FILE |
+                         MYLOGGER_FEATURE_STDOUT) == MYLOGGER_INIT_SUCCESS);
+    // Testing all levels
+    MYLOGGER_DEBUG("Test - debug\n");
+    MYLOGGER_INFO("Test - info\n");
+    MYLOGGER_WARNING("Test - warning\n");
+    MYLOGGER_ERROR("Test - error\n");
+    MYLOGGER_CRITICAL("Test - critical\n");
+    MYLOGGER_FATAL("Test - fatal\n");
+
+    mylogger_destroy();
+}
+
+/**
+ * Testing MyLogger logging into stderr with TID and Timestamps feature.
+ * */
+static void test_mylogger_log_to_stderr(void)
+{
+    assert(mylogger_init(NULL,
+                         MYLOGGER_FEATURE_TIMESTAMPS |
+                         MYLOGGER_FEATURE_THREAD_ID |
+                         MYLOGGER_FEATURE_NO_FILE |
+                         MYLOGGER_FEATURE_STDERR) == MYLOGGER_INIT_SUCCESS);
+    // Testing all levels
+    MYLOGGER_DEBUG("Test - debug\n");
+    MYLOGGER_INFO("Test - info\n");
+    MYLOGGER_WARNING("Test - warning\n");
+    MYLOGGER_ERROR("Test - error\n");
+    MYLOGGER_CRITICAL("Test - critical\n");
+    MYLOGGER_FATAL("Test - fatal\n");
+
+    mylogger_destroy();
+}
+
 // "make clean" after running tests to remove created files.
 int main(void)
 {
     test_mylogger_init_destroy();
+    test_mylogger_full_log_to_file();
+    test_mylogger_log_to_stdout();
+    test_mylogger_log_to_stderr();
     printf("Tests finished successfully!\n");
     return 0;
 }
