@@ -36,10 +36,12 @@ static void test_mylogger_init_destroy(void)
 {
     // First use of malloc should fail. Error code expected.
     {
+        fprintf(stderr, "\033[0;32mExpected error: \033[0m");
         assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_OTHER_ERROR);
     }
     // First use of fopen should fail. Error code expected.
     {
+        fprintf(stderr, "\033[0;32mExpected error: \033[0m");
         assert(mylogger_init(NULL, 0) == MYLOGGER_INIT_FILE_CREATION_ERROR);
     }
     // File specified - No errors expected
@@ -67,6 +69,7 @@ static void test_mylogger_init_destroy(void)
 
     // No file specified and MYLOGGER_FEATURE_NO_FILE - error expected
     {
+        fprintf(stderr, "\033[0;32mExpected error: \033[0m");
         assert(mylogger_init(NULL, MYLOGGER_FEATURE_NO_FILE) == MYLOGGER_INIT_OTHER_ERROR);
         // mylogger_destroy(); - Logger not initialized
     }
@@ -127,6 +130,10 @@ static void test_mylogger_log_to_stdout(void)
  * */
 static void test_mylogger_log_to_stderr(void)
 {
+    // You should not be able to log
+    fprintf(stderr, "\033[0;32mExpected error: \033[0m");
+    MYLOGGER_DEBUG("Test - debug\n");
+
     assert(mylogger_init(NULL,
                          MYLOGGER_FEATURE_TIMESTAMPS |
                          MYLOGGER_FEATURE_THREAD_ID |
@@ -150,6 +157,6 @@ int main(void)
     test_mylogger_full_log_to_file();
     test_mylogger_log_to_stdout();
     test_mylogger_log_to_stderr();
-    printf("Tests finished successfully!\n");
+    printf("\033[0;32mTests finished successfully!\033[0m\n");
     return 0;
 }

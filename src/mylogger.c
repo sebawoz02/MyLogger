@@ -24,6 +24,7 @@ typedef struct MyLogger_features
     bool feat_timestamps:1;     // MYLOGGER_FEATURE_TIMESTAMPS
     bool feat_tid:1;            // MYLOGGER_FEATURE_THREAD_ID
     bool feat_no_file:1;        // MYLOGGER_FEATURE_NO_FILE
+    bool feat_ansi_logs:1;      // MYLOGGER_FEATURE_STDOUT/STDERR | MYLOGGER_FEATURE_NO_FILE
 } MyLogger_features_S;
 
 
@@ -52,6 +53,13 @@ static const char* mylogger_level_print[] = {"DEBUG",
                                              "CRITICAL",
                                              "FATAL"
                                             };
+static const char* mylogger_level_print_ansi[] = {"DEBUG\033[0m",
+                                                  "\033[0;32mINFO\033[0m",
+                                                  "\033[0;33mWARNING\033[0m",
+                                                  "\033[0;31mERROR\033[0m",
+                                                  "\033[0;31mCRITICAL\033[0m",
+                                                  "\033[0;31mFATAL\033[0m"
+                                                };
 
 /**
  * Function that parses MyLogger features from uint8_t to structure.
@@ -67,7 +75,8 @@ static MyLogger_features_S __mylogger_parse_features(const mylogger_feature_t fe
       .feat_stderr =        features & MYLOGGER_FEATURE_STDERR,
       .feat_timestamps =    features & MYLOGGER_FEATURE_TIMESTAMPS,
       .feat_tid =           features & MYLOGGER_FEATURE_THREAD_ID,
-      .feat_no_file =       features & MYLOGGER_FEATURE_NO_FILE
+      .feat_no_file =       features & MYLOGGER_FEATURE_NO_FILE,
+      .feat_ansi_logs =     features & MYLOGGER_FEATURE_NO_FILE
     };
 }
 
@@ -248,9 +257,10 @@ void __attribute__(( format(printf, 5, 6) )) __mylogger_print(const char* file,
     size_t buffer_idx = 0;
 
     // ADD LOG LEVEL
+    const char* level_print = g_mylogger_instance->features.feat_ansi_logs ? mylogger_level_print_ansi[level] : mylogger_level_print[level];
     buffer_idx = (size_t)snprintf(&buffer[0],
                                   sizeof(buffer) - buffer_idx,
-                                  "[%s] ", mylogger_level_print[level]);
+                                  "[%s] ", level_print);
     // ADD TIMESTAMP
     if(g_mylogger_instance->features.feat_timestamps == 1)
         buffer_idx += __mylogger_add_timestamp(&buffer[buffer_idx], sizeof(buffer) - buffer_idx);
