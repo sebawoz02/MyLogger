@@ -19,6 +19,7 @@ MyLogger is a thread-safe logging library written in Gnu17 C language standard, 
 
 - **Thread ID (TID)**: Each log entry can include the Thread ID (TID), helping you identify which thread generated a particular log message.
 
+- **Color-Coded Log Levels**: The logger enhances log readability by adding color-coded log levels using ANSI escape sequences. (ONLY WHEN THE ONLY DESCRIPTORS SELECT ARE STDOUT OR STDERR) This visual distinction allows developers to quickly identify the severity of log messages, helping streamline the debugging process.
 ## Building and Testing
 
 MyLogger comes with a prepared building system using a Makefile, making it easy to compile, test, and install the library.
